@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: ai-expense-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ai_expense_tracker
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ai-expense-network
+
+  # Python ML API Server
+  python-ml:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: ai-expense-python-ml
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - PORT=8000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ai_expense_tracker?authSource=admin
+    depends_on:
+      - mongodb
+    volumes:
+      - ./ai_budget_model.pkl:/app/ai_budget_model.pkl:ro
+      - ./ai_budget_api_server.py:/app/ai_budget_api_server.py:ro
+      - ./ai_budget_ml_model.py:/app/ai_budget_ml_model.py:ro
+    networks:
+      - ai-expense-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  ai-expense-network:
+    driver: bridge

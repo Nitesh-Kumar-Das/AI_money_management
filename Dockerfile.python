@@ -1,0 +1,41 @@
+# Python ML Server Dockerfile
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        curl \
+        ca-certificates \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
+    && rm -rf /var/tmp/*
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+COPY ai_budget_api_server.py .
+COPY ai_budget_ml_model.py .
+COPY ai_budget_model.pkl .
+
+RUN groupadd --gid 1001 mluser \
+    && useradd --uid 1001 --gid mluser --create-home --shell /bin/bash mluser
+RUN chown -R mluser:mluser /app
+USER mluser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["python", "ai_budget_api_server.py"]

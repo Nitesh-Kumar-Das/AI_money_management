@@ -1,6 +1,4 @@
 # Flask API Server for AI Budget ML Model Integration
-# This server provides REST APIs to integrate the ML model with the Next.js frontend
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
@@ -10,18 +8,14 @@ import pandas as pd
 from ai_budget_ml_model import AIBudgetManager
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for Next.js integration
+CORS(app)
 
-# Initialize AI Budget Manager
 ai_budget = AIBudgetManager()
 
-# Train the model on startup
 try:
     logger.info("🚀 Training AI Budget Model on startup...")
     ai_budget.train_models()
@@ -31,7 +25,6 @@ except Exception as e:
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
     return jsonify({
         'status': 'healthy',
         'model_trained': ai_budget.is_trained,
@@ -40,21 +33,17 @@ def health_check():
 
 @app.route('/api/predict-spending', methods=['POST'])
 def predict_spending():
-    """Predict future spending for a user"""
     try:
         data = request.get_json()
         
-        # Validate required fields
         required_fields = ['user_income', 'user_age', 'category']
         for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
         
-        # Add current month if not provided
         if 'month' not in data:
             data['month'] = datetime.now().month
         
-        # Get prediction
         prediction = ai_budget.predict_spending(data)
         
         if prediction is None:
@@ -72,7 +61,6 @@ def predict_spending():
 
 @app.route('/api/detect-anomalies', methods=['POST'])
 def detect_anomalies():
-    """Detect spending anomalies"""
     try:
         data = request.get_json()
         
@@ -95,11 +83,9 @@ def detect_anomalies():
 
 @app.route('/api/budget-recommendations', methods=['POST'])
 def get_budget_recommendations():
-    """Generate budget recommendations"""
     try:
         data = request.get_json()
         
-        # Validate required fields
         required_fields = ['user_data', 'historical_expenses']
         for field in required_fields:
             if field not in data:
@@ -123,7 +109,6 @@ def get_budget_recommendations():
 
 @app.route('/api/spending-trends', methods=['POST'])
 def analyze_spending_trends():
-    """Analyze spending trends"""
     try:
         data = request.get_json()
         
@@ -145,11 +130,9 @@ def analyze_spending_trends():
 
 @app.route('/api/smart-insights', methods=['POST'])
 def get_smart_insights():
-    """Get comprehensive smart insights"""
     try:
         data = request.get_json()
         
-        # Validate required fields
         required_fields = ['user_data', 'expenses']
         for field in required_fields:
             if field not in data:
@@ -173,17 +156,14 @@ def get_smart_insights():
 
 @app.route('/api/category-predictions', methods=['POST'])
 def get_category_predictions():
-    """Get predictions for all categories"""
     try:
         data = request.get_json()
         
-        # Validate required fields
         required_fields = ['user_income', 'user_age']
         for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
         
-        # Get predictions for all categories
         predictions = {}
         for category in ai_budget.categories:
             prediction_data = {**data, 'category': category}
@@ -204,7 +184,6 @@ def get_category_predictions():
 
 @app.route('/api/budget-optimization', methods=['POST'])
 def optimize_budget():
-    """Optimize budget allocation"""
     try:
         data = request.get_json()
         
@@ -217,7 +196,6 @@ def optimize_budget():
         current_budget = data['current_budget']
         total_budget = data['total_budget']
         
-        # Get predictions for all categories
         predictions = {}
         for category in ai_budget.categories:
             prediction_data = {**user_data, 'category': category}
@@ -225,22 +203,19 @@ def optimize_budget():
             if prediction:
                 predictions[category] = prediction['predicted_amount']
         
-        # Optimize budget allocation
         optimized_budget = {}
         total_predicted = sum(predictions.values())
         
         if total_predicted > 0:
-            # Proportionally allocate budget based on predictions
             for category, predicted_amount in predictions.items():
                 proportion = predicted_amount / total_predicted
                 optimized_budget[category] = round(total_budget * proportion, 2)
         
-        # Calculate savings opportunities
         savings_opportunities = []
         for category, current_amount in current_budget.items():
             predicted_amount = predictions.get(category, current_amount)
-            if current_amount > predicted_amount * 1.2:  # 20% buffer
-                potential_savings = current_amount - (predicted_amount * 1.1)  # 10% buffer
+            if current_amount > predicted_amount * 1.2:
+                potential_savings = current_amount - (predicted_amount * 1.1)
                 savings_opportunities.append({
                     'category': category,
                     'current_budget': current_amount,
@@ -264,7 +239,6 @@ def optimize_budget():
 
 @app.route('/api/seasonal-analysis', methods=['POST'])
 def seasonal_analysis():
-    """Analyze seasonal spending patterns"""
     try:
         data = request.get_json()
         
@@ -273,7 +247,6 @@ def seasonal_analysis():
         
         expenses = data['expenses']
         
-        # Analyze seasonal patterns
         seasonal_data = {}
         monthly_totals = {}
         
@@ -285,7 +258,6 @@ def seasonal_analysis():
                 monthly_totals[month] = 0
             monthly_totals[month] += expense['amount']
         
-        # Calculate seasonal multipliers
         if monthly_totals:
             average_monthly = sum(monthly_totals.values()) / len(monthly_totals)
             
@@ -300,7 +272,6 @@ def seasonal_analysis():
                     'vs_average': ((actual_spending - average_monthly) / average_monthly * 100) if average_monthly > 0 else 0
                 }
         
-        # Generate seasonal recommendations
         recommendations = []
         current_month = datetime.now().month
         
@@ -327,19 +298,15 @@ def seasonal_analysis():
 
 @app.route('/api/retrain-model', methods=['POST'])
 def retrain_model():
-    """Retrain the model with new data"""
     try:
         data = request.get_json()
         
-        # If custom training data is provided, use it
         if 'training_data' in data:
             training_df = pd.DataFrame(data['training_data'])
             training_results = ai_budget.train_models(training_df)
         else:
-            # Retrain with generated data
             training_results = ai_budget.train_models()
         
-        # Save the updated model
         ai_budget.save_model('ai_budget_model_updated.pkl')
         
         return jsonify({
@@ -355,7 +322,6 @@ def retrain_model():
 
 @app.route('/api/model-stats', methods=['GET'])
 def get_model_stats():
-    """Get model statistics and information"""
     return jsonify({
         'success': True,
         'model_info': {
@@ -383,13 +349,16 @@ def get_model_stats():
     })
 
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 8000))
+    
     print("🚀 Starting AI Budget ML API Server...")
     print("📊 Model training complete!")
-    print("🌐 API endpoints available at:")
-    print("   • Health Check: http://localhost:5000/health")
-    print("   • Model Stats: http://localhost:5000/api/model-stats")
-    print("   • Predict Spending: http://localhost:5000/api/predict-spending")
-    print("   • Smart Insights: http://localhost:5000/api/smart-insights")
+    print(f"🌐 API endpoints available at http://0.0.0.0:{port}")
+    print("   • Health Check: /health")
+    print("   • Model Stats: /api/model-stats")
+    print("   • Predict Spending: /api/predict-spending")
+    print("   • Smart Insights: /api/smart-insights")
     print("   • And more... check /api/model-stats for full list")
     
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    app.run(debug=False, port=port, host='0.0.0.0')

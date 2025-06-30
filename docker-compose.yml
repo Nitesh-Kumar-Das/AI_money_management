@@ -1,0 +1,78 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: ai-expense-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ai_expense_tracker
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - ai-expense-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  python-ml:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: ai-expense-python-ml
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      FLASK_ENV: production
+      PORT: 8000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/ai_expense_tracker?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ai-expense-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.nextjs
+    container_name: ai-expense-nextjs
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - docker.env
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/ai_expense_tracker?authSource=admin
+      PYTHON_ML_API_URL: http://python-ml:8000
+      NEXT_PUBLIC_ML_API_URL: http://python-ml:8000
+      NEXTAUTH_SECRET: your-secret-key-change-in-production
+      NEXTAUTH_URL: http://localhost:3000
+      JWT_SECRET: your-jwt-secret-change-in-production
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      python-ml:
+        condition: service_healthy
+    networks:
+      - ai-expense-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  ai-expense-network:
+    driver: bridge

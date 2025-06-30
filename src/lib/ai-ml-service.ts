@@ -65,14 +65,29 @@ class AIBudgetMLService {
   private isConnected: boolean = false;
 
   constructor() {
-    // Use environment variable or default to localhost
-    this.baseURL = process.env.NEXT_PUBLIC_ML_API_URL || 'http://localhost:5000';
+    // Use API route for client-side requests, direct connection for server-side
+    if (typeof window !== 'undefined') {
+      // Client-side: use API route
+      this.baseURL = '/api/ai-ml';
+    } else {
+      // Server-side: use environment variable or default
+      this.baseURL = process.env.PYTHON_ML_API_URL || process.env.NEXT_PUBLIC_ML_API_URL || 'http://localhost:8000';
+    }
     this.checkConnection();
   }
 
   private async checkConnection(): Promise<void> {
     try {
-      const response = await fetch(`${this.baseURL}/health`);
+      let url: string;
+      if (this.baseURL === '/api/ai-ml') {
+        // Client-side: use API route with health endpoint
+        url = `${this.baseURL}?endpoint=${encodeURIComponent('/health')}`;
+      } else {
+        // Server-side: direct connection
+        url = `${this.baseURL}/health`;
+      }
+      
+      const response = await fetch(url);
       this.isConnected = response.ok;
       if (this.isConnected) {
         console.log('✅ Connected to AI Budget ML API');
@@ -92,13 +107,32 @@ class AIBudgetMLService {
         return this.getMockResponse<T>(endpoint, data);
       }
 
-      const response = await fetch(`${this.baseURL}${endpoint}`, {
-        method: data ? 'POST' : 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: data ? JSON.stringify(data) : undefined,
-      });
+      let url: string;
+      let requestOptions: RequestInit;
+
+      if (this.baseURL === '/api/ai-ml') {
+        // Client-side: use API route with endpoint as query parameter
+        url = `${this.baseURL}?endpoint=${encodeURIComponent(endpoint)}`;
+        requestOptions = {
+          method: data ? 'POST' : 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: data ? JSON.stringify(data) : undefined,
+        };
+      } else {
+        // Server-side: direct connection
+        url = `${this.baseURL}${endpoint}`;
+        requestOptions = {
+          method: data ? 'POST' : 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: data ? JSON.stringify(data) : undefined,
+        };
+      }
+
+      const response = await fetch(url, requestOptions);
 
       console.log(`📡 ML API Response status: ${response.status}`);
 
@@ -408,7 +442,16 @@ class AIBudgetMLService {
 
   async testConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseURL}/health`);
+      let url: string;
+      if (this.baseURL === '/api/ai-ml') {
+        // Client-side: use API route with health endpoint
+        url = `${this.baseURL}?endpoint=${encodeURIComponent('/health')}`;
+      } else {
+        // Server-side: direct connection
+        url = `${this.baseURL}/health`;
+      }
+      
+      const response = await fetch(url);
       this.isConnected = response.ok;
       return this.isConnected;
     } catch (error) {
