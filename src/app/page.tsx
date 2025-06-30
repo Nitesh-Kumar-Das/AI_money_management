@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import WelcomeLoader from '@/components/WelcomeLoader';
+import { WelcomeLoader } from '@/components';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);

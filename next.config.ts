@@ -9,9 +9,6 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    esmExternals: false,
-  },
   webpack: (config, { dev, isServer }) => {
     // Add path alias resolution for production builds
     config.resolve.alias = {
@@ -22,6 +19,17 @@ const nextConfig: NextConfig = {
       '@/models': path.resolve(__dirname, 'src/models'),
       '@/types': path.resolve(__dirname, 'src/types'),
       '@/app': path.resolve(__dirname, 'src/app'),
+    };
+    
+    // Ensure proper file extension resolution
+    config.resolve.extensions = ['.tsx', '.ts', '.jsx', '.js', '.json'];
+    
+    // Add fallback for module resolution
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
     };
     
     return config;

@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Modern3DAIInsights from '@/components/Modern3DAIInsights';
-import ReceiptScanner from '@/components/ReceiptScanner';
+import { Modern3DAIInsights, ReceiptScanner } from '@/components';
 import { ExtractedExpenseData } from '@/lib/ocr-service';
 
 interface Expense {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import ReceiptScanner from '@/components/ReceiptScanner';
+import { ReceiptScanner } from '@/components';
 import { ExtractedExpenseData } from '@/lib/ocr-service';
 
 export default function AddExpense() {

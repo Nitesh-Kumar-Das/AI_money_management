@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import BudgetCharts from '@/components/BudgetCharts';
+import { BudgetCharts } from '@/components';
 import { 
   PlusIcon, 
   ChartBarIcon,
