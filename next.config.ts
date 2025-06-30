@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -10,6 +11,20 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     esmExternals: false,
+  },
+  webpack: (config, { dev, isServer }) => {
+    // Add path alias resolution for production builds
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+      '@/components': path.resolve(__dirname, 'src/components'),
+      '@/lib': path.resolve(__dirname, 'src/lib'),
+      '@/models': path.resolve(__dirname, 'src/models'),
+      '@/types': path.resolve(__dirname, 'src/types'),
+      '@/app': path.resolve(__dirname, 'src/app'),
+    };
+    
+    return config;
   },
   env: {
     AI_ML_API_URL: process.env.AI_ML_API_URL || process.env.PYTHON_ML_API_URL || 'http://localhost:8000',
