@@ -1,0 +1,54 @@
+# Render deployment configuration
+services:
+  # Next.js Frontend
+  - type: web
+    name: ai-expense-frontend
+    env: docker
+    dockerfilePath: ./Dockerfile.nextjs
+    plan: free
+    buildCommand: echo "Building with Docker"
+    startCommand: echo "Starting with Docker"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromService:
+          type: pserv
+          name: mongodb
+          property: connectionString
+      - key: AI_ML_API_URL
+        fromService:
+          type: web
+          name: ai-expense-ml-api
+          property: host
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+    autoDeploy: true
+    
+  # Python ML API
+  - type: web
+    name: ai-expense-ml-api
+    env: docker
+    dockerfilePath: ./Dockerfile.python
+    plan: free
+    buildCommand: echo "Building ML API with Docker"
+    startCommand: echo "Starting ML API with Docker"
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: FLASK_ENV
+        value: production
+    autoDeploy: true
+
+  # MongoDB Database
+  - type: pserv
+    name: mongodb
+    plan: free
+    env: docker
+    dockerImage: mongo:7.0
+    disk:
+      name: mongodb-data
+      mountPath: /data/db
+      sizeGB: 1

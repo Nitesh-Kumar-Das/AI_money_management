@@ -1,0 +1,30 @@
+# Railway deployment configuration
+services:
+  frontend:
+    name: ai-expense-frontend
+    source:
+      dockerfile: Dockerfile.nextjs
+    variables:
+      NODE_ENV: production
+      PORT: 3000
+    domains:
+      - ai-expense-tracker.up.railway.app
+    
+  backend:
+    name: ai-expense-ml-api
+    source:
+      dockerfile: Dockerfile.python
+    variables:
+      PORT: 8000
+      FLASK_ENV: production
+    domains:
+      - ai-expense-ml-api.up.railway.app
+      
+  database:
+    name: mongodb
+    image: mongo:7.0
+    variables:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+    volumes:
+      - /data/db

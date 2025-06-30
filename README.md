@@ -300,20 +300,122 @@ curl http://localhost:3000/api/health
 curl http://localhost:8000/health
 ```
 
-### ☁️ **Cloud Deployment Options**
+### ☁️ **Free Hosting Services with Docker Support**
 
-#### AWS ECS/Fargate
-- Upload Docker images to ECR
-- Deploy using ECS service definitions
-- Configure load balancers and auto-scaling
+#### 🆓 **Railway** (Recommended for Full-Stack Apps)
+Railway offers generous free tier with Docker support and database hosting.
 
-#### Google Cloud Run
-- Deploy containerized services individually
-- Automatic scaling and managed infrastructure
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
 
-#### Azure Container Instances
-- Multi-container group deployment
-- Integrated with Azure services
+# Login to Railway
+railway login
+
+# Deploy from Docker Compose
+railway up --service nextjs-frontend
+railway up --service python-ml-api  
+railway up --service mongodb
+
+# Or deploy as a project
+railway link
+railway up
+```
+
+**Features:**
+- $5 free credits monthly
+- PostgreSQL/MongoDB databases included
+- Automatic SSL certificates
+- Custom domains support
+- Environment variables management
+
+#### 🆓 **Render** (Great for Docker Apps)
+Render provides free Docker hosting with automatic deployments.
+
+```bash
+# Create render.yaml in your project root
+# Connect GitHub repository to Render
+# Automatic deployments on git push
+```
+
+**Features:**
+- Free tier: 750 hours/month
+- PostgreSQL database included
+- SSL certificates
+- Custom domains
+- GitHub integration
+
+#### 🆓 **Fly.io** (Docker-Native Platform)
+Fly.io specializes in Docker deployments with global edge locations.
+
+```bash
+# Install flyctl
+curl -L https://fly.io/install.sh | sh
+
+# Login and initialize
+fly auth login
+fly launch
+
+# Deploy
+fly deploy
+```
+
+**Features:**
+- 3 VMs free (256MB RAM each)
+- Global deployment
+- PostgreSQL included
+- Custom domains
+- Docker-first approach
+
+#### 🆓 **Heroku** (Container Registry)
+Deploy using Heroku's Container Registry.
+
+```bash
+# Install Heroku CLI and login
+heroku login
+heroku container:login
+
+# Create apps for each service
+heroku create your-app-frontend
+heroku create your-app-ml-api
+
+# Push and release containers
+heroku container:push web -a your-app-frontend
+heroku container:release web -a your-app-frontend
+```
+
+**Features:**
+- 1000 free hours/month
+- Add-ons ecosystem
+- PostgreSQL included
+- Easy scaling
+- Custom domains
+
+#### 🆓 **Google Cloud Run** (Serverless Containers)
+Deploy containers with generous free tier.
+
+```bash
+# Install gcloud CLI
+# Enable Cloud Run API
+gcloud run deploy nextjs-app --source . --platform managed
+gcloud run deploy python-ml-api --source . --platform managed
+```
+
+**Features:**
+- 2 million requests/month free
+- Pay-per-use pricing
+- Automatic scaling
+- Custom domains
+- Cloud SQL integration
+
+#### 🆓 **AWS ECS Fargate** (Free Tier)
+Use AWS free tier for container hosting.
+
+**Features:**
+- 12 months free tier
+- ECS + Fargate free usage
+- RDS free tier for database
+- Application Load Balancer
 
 ### 🔧 **Traditional Deployment**
 
@@ -335,6 +437,176 @@ python ai_budget_api_server.py
 # Ensure MongoDB is running
 mongod --dbpath /data/db
 ```
+
+## 🆓 Free Hosting Deployment Guide
+
+### 📋 **Step-by-Step Deployment**
+
+#### 🚀 **Option 1: Railway (Recommended)**
+Railway offers the best free tier for full-stack Docker applications.
+
+1. **Prepare Your Repository**
+   ```bash
+   git add .
+   git commit -m "Ready for Railway deployment"
+   git push origin docker-containerization
+   ```
+
+2. **Install Railway CLI**
+   ```bash
+   npm install -g @railway/cli
+   railway login
+   ```
+
+3. **Deploy to Railway**
+   ```bash
+   railway init
+   railway up
+   ```
+
+4. **Set Environment Variables**
+   ```bash
+   railway variables:set NODE_ENV=production
+   railway variables:set JWT_SECRET=$(openssl rand -base64 32)
+   railway variables:set NEXTAUTH_SECRET=$(openssl rand -base64 32)
+   ```
+
+5. **Access Your App**
+   - Frontend: `https://your-project.up.railway.app`
+   - ML API: `https://your-ml-api.up.railway.app`
+
+#### 🎯 **Option 2: Render**
+Perfect for Docker-based applications with automatic deployments.
+
+1. **Connect GitHub Repository**
+   - Go to [Render.com](https://render.com)
+   - Create account and connect GitHub
+   - Select your repository
+
+2. **Create Web Services**
+   ```yaml
+   # Use the provided render.yaml configuration
+   # Services will be created automatically
+   ```
+
+3. **Configure Environment Variables**
+   - Set in Render dashboard
+   - Variables are automatically injected
+
+4. **Deploy**
+   - Automatic deployment on git push
+   - View logs in Render dashboard
+
+#### ⚡ **Option 3: Fly.io**
+Docker-native platform with global edge locations.
+
+1. **Install Fly CLI**
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   fly auth login
+   ```
+
+2. **Deploy Frontend**
+   ```bash
+   fly launch --config fly.frontend.toml
+   fly deploy --config fly.frontend.toml
+   ```
+
+3. **Deploy ML API**
+   ```bash
+   fly launch --config fly.ml-api.toml
+   fly deploy --config fly.ml-api.toml
+   ```
+
+#### 🔧 **Option 4: Heroku**
+Traditional platform with container support.
+
+1. **Make Deploy Script Executable**
+   ```bash
+   chmod +x deploy-heroku.sh
+   ./deploy-heroku.sh
+   ```
+
+2. **Manual Deployment**
+   ```bash
+   heroku container:push web -a your-app-name
+   heroku container:release web -a your-app-name
+   ```
+
+### 💾 **Database Options for Free Hosting**
+
+#### MongoDB Atlas (Recommended)
+- **Free Tier**: 512MB storage
+- **Global clusters**
+- **Built-in security**
+- **Easy integration**
+
+```bash
+# Get connection string from MongoDB Atlas
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/ai-expense-tracker
+```
+
+#### Railway PostgreSQL
+- **Free with Railway**
+- **Automatic backups**
+- **Easy scaling**
+
+#### ElephantSQL (PostgreSQL)
+- **20MB free tier**
+- **Reliable service**
+- **Easy setup**
+
+### 🔧 **Environment Variables Setup**
+
+#### Required Variables:
+```env
+# Frontend
+NODE_ENV=production
+MONGODB_URI=your_mongodb_connection_string
+AI_ML_API_URL=your_ml_api_url
+JWT_SECRET=your_jwt_secret_key
+NEXTAUTH_SECRET=your_nextauth_secret
+
+# ML API
+PORT=8000
+FLASK_ENV=production
+```
+
+#### Generate Secrets:
+```bash
+# Generate JWT secret
+openssl rand -base64 32
+
+# Generate NextAuth secret
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+### 📊 **Free Tier Comparison**
+
+| Service | Frontend | ML API | Database | Custom Domain | SSL |
+|---------|----------|--------|----------|---------------|-----|
+| **Railway** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Render** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Fly.io** | ✅ | ✅ | ❌ | ✅ | ✅ |
+| **Heroku** | ✅ | ✅ | Add-on | ✅ | ✅ |
+| **Vercel** | ✅ | ❌ | ❌ | ✅ | ✅ |
+
+### 🚀 **Deployment Tips**
+
+1. **Use MongoDB Atlas** for database (free 512MB)
+2. **Railway** offers best free tier for full-stack apps
+3. **Render** has excellent Docker support
+4. **Set up monitoring** with service health checks
+5. **Use environment variables** for configuration
+6. **Enable auto-deploy** from GitHub pushes
+
+### 📈 **Scaling Considerations**
+
+- **Free tiers** usually have usage limits
+- **Monitor** your usage to avoid service interruptions
+- **Consider paid tiers** as your app grows
+- **Use CDN** for static assets
+- **Implement caching** for better performance
 
 ## 🐳 Docker Commands
 
