@@ -37,10 +37,6 @@ A modern, intelligent expense tracking application built with Next.js that uses 
 ![image](https://github.com/user-attachments/assets/cf2ae109-bcf4-40b1-9cda-42322c1b8c16)
 ![image](https://github.com/user-attachments/assets/4344d5a6-a328-4764-b248-24a1bbbd402d)
 
-
-
-
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -168,34 +164,6 @@ ai-expense-tracker/
 - **Date Formats**: dd/mm/yyyy, mm/dd/yyyy, dd-mm-yyyy, dd Mon yyyy
 - **Receipt Types**: Restaurant, fuel, shopping, medical, transport receipts
 
-### Extraction Patterns
-```typescript
-// Amount patterns
-₹1,234.56 or Rs 1,234.56
-Total: 1,234.56
-Amount: ₹1,234.56
-Grand Total: Rs 1,234.56
-
-// Category classification
-Food: restaurant, cafe, pizza, swiggy, zomato
-Transport: uber, ola, taxi, fuel, petrol
-Shopping: mall, store, amazon, flipkart
-```
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-1. Push your code to GitHub
-2. Connect your repository to [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard
-4. Deploy automatically on every commit
-
-### Manual Deployment
-```bash
-npm run build
-npm start
-```
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -206,7 +174,7 @@ npm start
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is opensourced to all
 
 ## 🙏 Acknowledgments
 
@@ -214,11 +182,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Next.js** for the amazing React framework
 - **MongoDB** for reliable data storage
 - **Tailwind CSS** for beautiful styling
-- **Vercel** for seamless deployment
 
 ## 📞 Support
 
-If you have any questions or need help, please open an issue or contact the development team.
+If you have any questions or need help, please open an issue or contact me.
 
 ---
 
