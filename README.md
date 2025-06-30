@@ -29,6 +29,18 @@ A modern, intelligent expense tracking application built with Next.js that uses 
 - **💾 MongoDB Integration**: Reliable data storage and retrieval
 - **🛡️ Data Protection**: Secure API endpoints and user data handling
 
+
+## PICS:
+![image](https://github.com/user-attachments/assets/d95ac3b8-7554-4edf-a928-0c60626b2fda)
+![image](https://github.com/user-attachments/assets/e4c2302b-6f69-4ae1-885d-80e8c5aa56f2)
+![image](https://github.com/user-attachments/assets/6f8cb0bc-e8e4-43cd-b4f6-0d0497c3a486)
+![image](https://github.com/user-attachments/assets/cf2ae109-bcf4-40b1-9cda-42322c1b8c16)
+![image](https://github.com/user-attachments/assets/4344d5a6-a328-4764-b248-24a1bbbd402d)
+
+
+
+
+
 ## 🚀 Getting Started
 
 ### Prerequisites
