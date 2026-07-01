@@ -72,7 +72,7 @@ A modern, intelligent expense tracking application built with Next.js that lever
 
 - Node.js 18 or later
 - MongoDB instance (local or cloud-hosted)
-- A package manager: npm, yarn, pnpm, or bun
+- Bun runtime and package manager installed
 
 ### Installation
 
@@ -86,7 +86,7 @@ A modern, intelligent expense tracking application built with Next.js that lever
 2. **Install dependencies**
 
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Configure environment variables**
@@ -102,7 +102,7 @@ A modern, intelligent expense tracking application built with Next.js that lever
 4. **Start the development server**
 
    ```bash
-   npm run dev
+   bun run dev
    ```
 
 5. **Open the application**
