@@ -162,7 +162,7 @@ class OCRService {
       .sort(([,a], [,b]) => b - a)[0][0];
   }
 
-  extractDescription(text: string, amount: number | null): string | null {
+  extractDescription(text: string): string | null {
     // Look for merchant names, shop names, or descriptive text
     const lines = text.split('\n').filter(line => line.trim().length > 0);
     
@@ -191,7 +191,7 @@ class OCRService {
       const amount = this.extractAmount(text);
       const category = this.extractCategory(text);
       const date = this.extractDate(text);
-      const description = this.extractDescription(text, amount);
+      const description = this.extractDescription(text);
 
       // Calculate overall confidence based on what we extracted
       let confidence = ocrResult.confidence;

@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { ocrService, ExtractedExpenseData } from '@/lib/ocr-service';
 import OCRResultsDisplay from './OCRResultsDisplay';
+import { CameraIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface ReceiptScannerProps {
   onDataExtracted: (data: ExtractedExpenseData) => void;
@@ -33,14 +34,12 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
 
     setError(null);
     
-    // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
       setPreviewUrl(e.target?.result as string);
     };
     reader.readAsDataURL(file);
 
-    // Process the image
     await processImage(file);
   };
 
@@ -49,7 +48,6 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
     setProgress(0);
 
     try {
-      // Simulate progress updates
       const progressInterval = setInterval(() => {
         setProgress(prev => {
           if (prev >= 90) {
@@ -65,7 +63,6 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
       clearInterval(progressInterval);
       setProgress(100);
       
-      // Show results for review
       setExtractedData(extractedData);
 
     } catch (error) {
@@ -93,13 +90,11 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
-      // Create a FileList-like object and process directly
       if (fileInputRef.current) {
         const dt = new DataTransfer();
         dt.items.add(file);
         fileInputRef.current.files = dt.files;
         
-        // Process the file directly
         handleFileSelect({
           target: { files: dt.files }
         } as React.ChangeEvent<HTMLInputElement>);
@@ -120,39 +115,39 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
           onReject={handleRejectResults}
         />
       ) : (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">📸 Scan Receipt</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Scan Receipt</h2>
               <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
+                className="text-gray-400 hover:text-gray-600 transition-colors"
                 disabled={isProcessing}
               >
-                ×
+                <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-gray-100 border border-gray-200 text-gray-700 px-4 py-3 rounded-lg mb-4 text-sm">
                 {error}
               </div>
             )}
 
             {!previewUrl && !isProcessing && (
               <div
-                className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-500 transition-colors"
+                className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors"
                 onClick={() => fileInputRef.current?.click()}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
               >
-                <div className="text-6xl mb-4">📷</div>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Upload Receipt Image</h3>
-                <p className="text-gray-500 mb-4">
+                <CameraIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                <h3 className="text-sm font-medium text-gray-700 mb-1">Upload Receipt Image</h3>
+                <p className="text-gray-400 text-xs mb-2">
                   Click to select or drag & drop your receipt image
                 </p>
-                <p className="text-sm text-gray-400">
-                  Supported formats: JPG, PNG, WEBP (Max 10MB)
+                <p className="text-xs text-gray-300">
+                  Supported: JPG, PNG, WEBP (Max 10MB)
                 </p>
                 
                 <input
@@ -170,33 +165,29 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
                 <img
                   src={previewUrl}
                   alt="Receipt preview"
-                  className="max-w-full max-h-64 object-contain mx-auto rounded-lg border mb-4"
+                  className="max-w-full max-h-64 object-contain mx-auto rounded-lg border border-gray-200 mb-4"
                 />
-                <div className="flex gap-3 justify-center">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                  >
-                    Choose Different Image
-                  </button>
-                </div>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+                >
+                  Choose Different Image
+                </button>
               </div>
             )}
 
             {isProcessing && (
               <div className="text-center py-8">
-                <div className="relative w-24 h-24 mx-auto mb-6">
-                  <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
-                  <div 
-                    className="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"
-                  ></div>
+                <div className="relative w-20 h-20 mx-auto mb-5">
+                  <div className="absolute inset-0 rounded-full border-2 border-gray-200"></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-gray-900 border-t-transparent animate-spin"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-lg font-bold text-blue-600">{Math.round(progress)}%</span>
+                    <span className="text-sm font-semibold text-gray-900">{Math.round(progress)}%</span>
                   </div>
                 </div>
                 
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">🔍 Scanning Receipt...</h3>
-                <p className="text-gray-500 mb-4">
+                <h3 className="text-sm font-medium text-gray-700 mb-1">Scanning Receipt...</h3>
+                <p className="text-gray-400 text-xs mb-4">
                   {progress < 30 ? 'Analyzing image...' :
                    progress < 60 ? 'Extracting text...' :
                    progress < 90 ? 'Processing data...' :
@@ -207,31 +198,31 @@ export default function ReceiptScanner({ onDataExtracted, onClose }: ReceiptScan
                   <img
                     src={previewUrl}
                     alt="Receipt being processed"
-                    className="max-w-full max-h-32 object-contain mx-auto rounded-lg border opacity-50"
+                    className="max-w-full max-h-32 object-contain mx-auto rounded-lg border border-gray-200 opacity-40"
                   />
                 )}
               </div>
             )}
 
-            <div className="mt-6 text-center">
-              <div className="bg-blue-50 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">🤖 AI Will Extract:</h4>
-                <div className="grid grid-cols-2 gap-2 text-sm text-blue-700">
+            <div className="mt-5">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-medium text-gray-700 text-xs uppercase tracking-wide mb-2.5">AI Will Extract</h4>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
                   <div className="flex items-center">
-                    <span className="mr-2">💸</span>
-                    <span>Amount</span>
+                    <span className="w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                    Amount
                   </div>
                   <div className="flex items-center">
-                    <span className="mr-2">🗂️</span>
-                    <span>Category</span>
+                    <span className="w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                    Category
                   </div>
                   <div className="flex items-center">
-                    <span className="mr-2">📆</span>
-                    <span>Date</span>
+                    <span className="w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                    Date
                   </div>
                   <div className="flex items-center">
-                    <span className="mr-2">📝</span>
-                    <span>Description</span>
+                    <span className="w-1 h-1 bg-gray-400 rounded-full mr-2"></span>
+                    Description
                   </div>
                 </div>
               </div>

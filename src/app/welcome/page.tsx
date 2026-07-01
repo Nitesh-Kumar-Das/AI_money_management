@@ -31,7 +31,7 @@ export default function WelcomePage() {
   if (!userName) {
     return (
       <div className="h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-700"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-300 border-t-gray-900"></div>
       </div>
     );
   }

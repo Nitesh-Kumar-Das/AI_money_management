@@ -207,18 +207,18 @@ export default function BudgetsPage() {
 
   const getSuggestionIcon = (type: string) => {
     switch (type) {
-      case 'alert': return <ExclamationTriangleIcon className="w-5 h-5" />;
-      case 'increase': return <ArrowTrendingUpIcon className="w-5 h-5" />;
-      case 'decrease': return <ArrowTrendingDownIcon className="w-5 h-5" />;
-      case 'optimize': return <AdjustmentsHorizontalIcon className="w-5 h-5" />;
-      default: return <LightBulbIcon className="w-5 h-5" />;
+      case 'alert': return <ExclamationTriangleIcon className="w-4 h-4" />;
+      case 'increase': return <ArrowTrendingUpIcon className="w-4 h-4" />;
+      case 'decrease': return <ArrowTrendingDownIcon className="w-4 h-4" />;
+      case 'optimize': return <AdjustmentsHorizontalIcon className="w-4 h-4" />;
+      default: return <LightBulbIcon className="w-4 h-4" />;
     }
   };
 
-  const getSuggestionColor = (type: string, priority: string) => {
-    if (priority === 'high') return 'text-red-600 bg-red-50 border-red-200';
-    if (priority === 'medium') return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-blue-600 bg-blue-50 border-blue-200';
+  const getSuggestionColor = (priority: string) => {
+    if (priority === 'high') return 'text-gray-900 bg-gray-100 border-gray-300';
+    if (priority === 'medium') return 'text-gray-700 bg-gray-50 border-gray-200';
+    return 'text-gray-600 bg-gray-50 border-gray-200';
   };
 
   const getUtilizationPercentage = (budget: Budget) => {
@@ -226,56 +226,56 @@ export default function BudgetsPage() {
   };
 
   const getUtilizationColor = (percentage: number) => {
-    if (percentage >= 90) return 'bg-red-500';
-    if (percentage >= 75) return 'bg-yellow-500';
-    if (percentage >= 50) return 'bg-blue-500';
-    return 'bg-green-500';
+    if (percentage >= 90) return 'bg-gray-900';
+    if (percentage >= 75) return 'bg-gray-700';
+    if (percentage >= 50) return 'bg-gray-500';
+    return 'bg-gray-400';
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your budgets...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-gray-300 border-t-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-500 text-sm">Loading your budgets...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-3 sm:p-4">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
           <div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">Smart Budgets</h1>
-            <p className="text-sm sm:text-base text-gray-600">AI-powered budget management and insights</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Smart Budgets</h1>
+            <p className="text-sm text-gray-500">AI-powered budget management and insights</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <button
               onClick={() => setIncludeAI(!includeAI)}
-              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium transition-all text-sm sm:text-base ${
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all text-sm ${
                 includeAI 
-                  ? 'bg-purple-600 text-white shadow-lg' 
-                  : 'bg-white text-purple-600 border border-purple-600'
+                  ? 'bg-gray-900 text-white' 
+                  : 'bg-white text-gray-700 border border-gray-200'
               }`}
             >
-              <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" />
+              <SparklesIcon className="w-4 h-4" />
               AI Insights {includeAI ? 'On' : 'Off'}
             </button>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+              className="flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors text-sm"
             >
-              <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <PlusIcon className="w-4 h-4" />
               Create Budget
             </button>
           </div>
         </div>
 
         {/* Budgets Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {budgets.map((budget) => {
             const utilizationPercentage = getUtilizationPercentage(budget);
             const remaining = budget.amount - budget.spent;
@@ -283,61 +283,57 @@ export default function BudgetsPage() {
             return (
               <div
                 key={budget._id}
-                className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition-all"
+                className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow"
               >
                 {/* Budget Header */}
-                <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-2">
-                  <div className="flex-1">
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">{budget.name}</h3>
-                    <p className="text-xs sm:text-sm text-gray-500 capitalize">{budget.category}</p>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-gray-900 truncate">{budget.name}</h3>
+                    <p className="text-xs text-gray-400 capitalize">{budget.category}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xl sm:text-2xl font-bold text-gray-900">₹{budget.amount}</p>
-                    <p className="text-xs sm:text-sm text-gray-500">{budget.period.type}</p>
+                  <div className="text-right ml-3">
+                    <p className="text-lg font-bold text-gray-900">₹{budget.amount.toLocaleString()}</p>
+                    <p className="text-xs text-gray-400">{budget.period.type}</p>
                   </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mb-3 sm:mb-4">
-                  <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-1">
-                    <span>Spent: ₹{budget.spent}</span>
-                    <span>Remaining: ₹{remaining}</span>
+                <div className="mb-4">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+                    <span>Spent: ₹{budget.spent.toLocaleString()}</span>
+                    <span>Remaining: ₹{remaining.toLocaleString()}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-100 rounded-full h-1.5">
                     <div
-                      className={`h-2 rounded-full transition-all ${getUtilizationColor(utilizationPercentage)}`}
+                      className={`h-1.5 rounded-full transition-all ${getUtilizationColor(utilizationPercentage)}`}
                       style={{ width: `${Math.min(utilizationPercentage, 100)}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">{utilizationPercentage}% utilized</p>
+                  <p className="text-xs text-gray-400 mt-1">{utilizationPercentage}% utilized</p>
                 </div>
 
                 {/* AI Features */}
                 {includeAI && (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     {/* Performance Metrics */}
                     {budget.performanceMetrics && (
                       <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="flex items-center gap-2 mb-2">
-                          <ChartBarIcon className="w-4 h-4 text-gray-600" />
-                          <span className="text-sm font-medium text-gray-700">Performance</span>
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <ChartBarIcon className="w-3.5 h-3.5 text-gray-500" />
+                          <span className="text-xs font-medium text-gray-600">Performance</span>
                         </div>
-                        <div className="text-xs text-gray-600 space-y-1">
+                        <div className="text-xs text-gray-500 space-y-1">
                           <div className="flex justify-between">
                             <span>Trend:</span>
-                            <span className={`font-medium ${
-                              budget.performanceMetrics.spendingTrend === 'increasing' ? 'text-red-600' :
-                              budget.performanceMetrics.spendingTrend === 'decreasing' ? 'text-green-600' :
-                              'text-gray-600'
-                            }`}>
+                            <span className="font-medium text-gray-700">
                               {budget.performanceMetrics.spendingTrend}
                             </span>
                           </div>
                           {budget.performanceMetrics.predictedOverrun > 0 && (
                             <div className="flex justify-between">
                               <span>Predicted overrun:</span>
-                              <span className="font-medium text-red-600">
-                                ${budget.performanceMetrics.predictedOverrun.toFixed(2)}
+                              <span className="font-medium text-gray-900">
+                                ₹{budget.performanceMetrics.predictedOverrun.toFixed(0)}
                               </span>
                             </div>
                           )}
@@ -347,21 +343,21 @@ export default function BudgetsPage() {
 
                     {/* AI Suggestions */}
                     {budget.aiSuggestions && budget.aiSuggestions.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <SparklesIcon className="w-4 h-4 text-purple-600" />
-                          <span className="text-sm font-medium text-gray-700">AI Suggestions</span>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <SparklesIcon className="w-3.5 h-3.5 text-gray-500" />
+                          <span className="text-xs font-medium text-gray-600">AI Suggestions</span>
                         </div>
                         {budget.aiSuggestions.slice(0, 2).map((suggestion, index) => (
                           <div
                             key={index}
-                            className={`p-3 rounded-lg border text-xs ${getSuggestionColor(suggestion.type, suggestion.priority)}`}
+                            className={`p-2.5 rounded-lg border text-xs ${getSuggestionColor(suggestion.priority)}`}
                           >
-                            <div className="flex items-start gap-2">
+                            <div className="flex items-start gap-1.5">
                               {getSuggestionIcon(suggestion.type)}
                               <div className="flex-1">
-                                <p className="font-medium mb-1">{suggestion.message}</p>
-                                <p className="text-xs opacity-75">
+                                <p className="font-medium mb-0.5">{suggestion.message}</p>
+                                <p className="text-xs opacity-60">
                                   Confidence: {suggestion.confidence}%
                                 </p>
                                 {suggestion.actionable && suggestion.suggestedAmount && (
@@ -370,9 +366,9 @@ export default function BudgetsPage() {
                                       e.stopPropagation();
                                       applyAISuggestion(budget._id, suggestion);
                                     }}
-                                    className="mt-2 px-3 py-1 bg-white bg-opacity-50 rounded text-xs font-medium hover:bg-opacity-75 transition-all"
+                                    className="mt-1.5 px-2.5 py-1 bg-gray-900 text-white rounded text-xs font-medium hover:bg-gray-800 transition-colors"
                                   >
-                                    Apply (${suggestion.suggestedAmount})
+                                    Apply (₹{suggestion.suggestedAmount})
                                   </button>
                                 )}
                               </div>
@@ -384,12 +380,12 @@ export default function BudgetsPage() {
 
                     {/* Unusual Spending Alert */}
                     {budget.unusualSpending?.hasUnusualActivity && (
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                        <div className="flex items-center gap-2 text-orange-600">
-                          <ExclamationTriangleIcon className="w-4 h-4" />
-                          <span className="text-sm font-medium">Unusual Activity Detected</span>
+                      <div className="bg-gray-100 border border-gray-200 rounded-lg p-2.5">
+                        <div className="flex items-center gap-1.5 text-gray-700">
+                          <ExclamationTriangleIcon className="w-3.5 h-3.5" />
+                          <span className="text-xs font-medium">Unusual Activity Detected</span>
                         </div>
-                        <p className="text-xs text-orange-600 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                           {budget.unusualSpending.alerts[0]}
                         </p>
                       </div>
@@ -399,11 +395,11 @@ export default function BudgetsPage() {
 
                 {/* Auto-adjust indicator */}
                 {budget.autoAdjust.enabled && (
-                  <div className="mt-3 flex items-center gap-2 text-xs text-green-600">
-                    <AdjustmentsHorizontalIcon className="w-4 h-4" />
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-gray-500">
+                    <AdjustmentsHorizontalIcon className="w-3.5 h-3.5" />
                     <span>Auto-adjust enabled</span>
                     {budget.autoAdjust.lastAdjusted && (
-                      <span className="text-gray-500">
+                      <span className="text-gray-400">
                         (Last: {new Date(budget.autoAdjust.lastAdjusted).toLocaleDateString()})
                       </span>
                     )}
@@ -417,14 +413,14 @@ export default function BudgetsPage() {
         {/* AI Budget Analytics Charts */}
         {budgets.length > 0 && (
           <div className="mt-8">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-2">
-                  <ChartBarIcon className="w-6 h-6 text-white" />
+                <div className="w-9 h-9 bg-gray-900 rounded-lg flex items-center justify-center">
+                  <ChartBarIcon className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">AI Budget Analytics</h2>
-                  <p className="text-gray-600">Visual insights and performance metrics for your budgets</p>
+                  <h2 className="text-lg font-bold text-gray-900">Budget Analytics</h2>
+                  <p className="text-sm text-gray-500">Visual insights and performance metrics</p>
                 </div>
               </div>
               <BudgetCharts budgets={budgets} />
@@ -434,13 +430,13 @@ export default function BudgetsPage() {
 
         {/* Empty State */}
         {budgets.length === 0 && (
-          <div className="text-center py-12">
-            <ChartBarIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No budgets yet</h3>
-            <p className="text-gray-600 mb-6">Create your first smart budget to get AI-powered insights</p>
+          <div className="text-center py-16">
+            <ChartBarIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">No budgets yet</h3>
+            <p className="text-gray-500 text-sm mb-6">Create your first smart budget to get AI-powered insights</p>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all"
+              className="bg-gray-900 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors text-sm"
             >
               Create Your First Budget
             </button>
@@ -449,32 +445,32 @@ export default function BudgetsPage() {
 
         {/* Create Budget Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50">
-            <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Create Smart Budget</h2>
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
+              <h2 className="text-xl font-bold text-gray-900 mb-5">Create Budget</h2>
               
-              <form onSubmit={createBudget} className="space-y-3 sm:space-y-4">
+              <form onSubmit={createBudget} className="space-y-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Budget Name
                   </label>
                   <input
                     type="text"
                     value={newBudget.name}
                     onChange={(e) => setNewBudget({...newBudget, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category
                   </label>
                   <select
                     value={newBudget.category}
                     onChange={(e) => setNewBudget({...newBudget, category: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                   >
                     <option value="food">Food</option>
                     <option value="transport">Transport</option>
@@ -490,40 +486,38 @@ export default function BudgetsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                    Budget Amount (₹)
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Budget Amount (INR)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     value={newBudget.amount}
                     onChange={(e) => setNewBudget({...newBudget, amount: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Period
-                    </label>
-                    <select
-                      value={newBudget.period.type}
-                      onChange={(e) => setNewBudget({
-                        ...newBudget,
-                        period: {...newBudget.period, type: e.target.value}
-                      })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    >
-                      <option value="weekly">Weekly</option>
-                      <option value="monthly">Monthly</option>
-                      <option value="yearly">Yearly</option>
-                    </select>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Period
+                  </label>
+                  <select
+                    value={newBudget.period.type}
+                    onChange={(e) => setNewBudget({
+                      ...newBudget,
+                      period: {...newBudget.period, type: e.target.value}
+                    })}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
+                  >
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5 pt-1">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
@@ -532,9 +526,9 @@ export default function BudgetsPage() {
                         ...newBudget,
                         autoAdjust: {...newBudget.autoAdjust, enabled: e.target.checked}
                       })}
-                      className="mr-2"
+                      className="mr-2.5 rounded border-gray-300"
                     />
-                    <span className="text-sm text-gray-700">Enable auto-adjustment</span>
+                    <span className="text-sm text-gray-600">Enable auto-adjustment</span>
                   </label>
 
                   <label className="flex items-center">
@@ -545,23 +539,23 @@ export default function BudgetsPage() {
                         ...newBudget,
                         smartAlerts: {...newBudget.smartAlerts, enabled: e.target.checked}
                       })}
-                      className="mr-2"
+                      className="mr-2.5 rounded border-gray-300"
                     />
-                    <span className="text-sm text-gray-700">Enable smart alerts</span>
+                    <span className="text-sm text-gray-600">Enable smart alerts</span>
                   </label>
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                <div className="flex gap-3 pt-3">
                   <button
                     type="button"
                     onClick={() => setShowCreateForm(false)}
-                    className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                    className="flex-1 px-4 py-2.5 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all"
+                    className="flex-1 px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                   >
                     Create Budget
                   </button>

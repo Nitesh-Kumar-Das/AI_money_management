@@ -42,20 +42,16 @@ interface BudgetChartsProps {
   className?: string;
 }
 
-const COLORS = [
-  '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', 
-  '#d084d0', '#ffb347', '#87ceeb', '#dda0dd', '#98fb98'
-];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  food: '#ff6b6b',
-  transport: '#4ecdc4',
-  shopping: '#45b7d1',
-  entertainment: '#f9ca24',
-  utilities: '#f0932b',
-  healthcare: '#eb4d4b',
-  education: '#6c5ce7',
-  other: '#a55eea'
+  food: '#1a1a1a',
+  transport: '#404040',
+  shopping: '#666666',
+  entertainment: '#8c8c8c',
+  utilities: '#b3b3b3',
+  healthcare: '#4b5563',
+  education: '#1f2937',
+  other: '#9ca3af'
 };
 
 export default function BudgetCharts({ budgets, className = '' }: BudgetChartsProps) {
@@ -80,7 +76,7 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
         category: budget.category,
         spent: budget.spent,
         budgeted: budget.amount,
-        color: CATEGORY_COLORS[budget.category] || '#8884d8'
+        color: CATEGORY_COLORS[budget.category] || '#666666'
       });
     }
     return acc;
@@ -105,14 +101,14 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
       suggestions: budget.aiSuggestions!.length
     }));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color?: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold">{`${label}`}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color }}>
-              {`${entry.dataKey}: ₹${entry.value?.toLocaleString() || 0}`}
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg text-xs font-sans">
+          <p className="font-semibold mb-1 text-gray-900">{`${label}`}</p>
+          {payload.map((entry: { name: string; value: number; color?: string }, index: number) => (
+            <p key={index} style={{ color: entry.color === '#e3f2fd' ? '#6b7280' : entry.color }} className="text-gray-700">
+              {`${entry.name}: ₹${entry.value?.toLocaleString() || 0}`}
             </p>
           ))}
         </div>
@@ -121,12 +117,12 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
     return null;
   };
 
-  const PercentageTooltip = ({ active, payload, label }: any) => {
+  const PercentageTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; color?: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold">{`${label}`}</p>
-          <p style={{ color: payload[0].color }}>
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg text-xs font-sans">
+          <p className="font-semibold mb-1 text-gray-900">{`${label}`}</p>
+          <p className="text-gray-700">
             {`Utilization: ${payload[0].value}%`}
           </p>
         </div>
@@ -138,37 +134,38 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
   return (
     <div className={`space-y-8 ${className}`}>
       {/* Budget Utilization Overview */}
-      <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          📊 Budget Utilization Overview
+      <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">
+          Budget Utilization Overview
         </h3>
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={350}>
           <BarChart data={budgetUtilizationData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis 
               dataKey="name" 
               angle={-45}
               textAnchor="end"
-              height={100}
-              fontSize={12}
+              height={80}
+              fontSize={10}
+              stroke="#9ca3af"
             />
-            <YAxis />
+            <YAxis stroke="#9ca3af" fontSize={10} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Bar dataKey="budgeted" fill="#e3f2fd" name="Budgeted Amount" />
-            <Bar dataKey="spent" fill="#2196f3" name="Spent Amount" />
-            <Bar dataKey="remaining" fill="#4caf50" name="Remaining" />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
+            <Bar dataKey="budgeted" fill="#e5e7eb" name="Budgeted Amount" />
+            <Bar dataKey="spent" fill="#4b5563" name="Spent Amount" />
+            <Bar dataKey="remaining" fill="#9ca3af" name="Remaining" />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Category Spending Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            🥧 Spending by Category
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <h3 className="text-base font-semibold text-gray-900 mb-5">
+            Spending by Category
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
                 data={categorySpendingData}
@@ -189,40 +186,41 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            📈 Budget vs Actual Spending
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <h3 className="text-base font-semibold text-gray-900 mb-5">
+            Budget vs Actual Spending
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={categorySpendingData} layout="horizontal">
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" />
-              <YAxis dataKey="category" type="category" width={80} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis type="number" stroke="#9ca3af" fontSize={10} />
+              <YAxis dataKey="category" type="category" width={80} stroke="#9ca3af" fontSize={10} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="budgeted" fill="#e0e0e0" name="Budgeted" />
-              <Bar dataKey="spent" fill="#ff6b6b" name="Spent" />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
+              <Bar dataKey="budgeted" fill="#e5e7eb" name="Budgeted" />
+              <Bar dataKey="spent" fill="#4b5563" name="Spent" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Budget Utilization Percentages */}
-      <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          📊 Budget Utilization Percentages
+      <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <h3 className="text-base font-semibold text-gray-900 mb-5">
+          Budget Utilization Percentages
         </h3>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={260}>
           <BarChart data={budgetUtilizationData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis 
               dataKey="name"
               angle={-45}
               textAnchor="end"
-              height={100}
-              fontSize={12}
+              height={80}
+              fontSize={10}
+              stroke="#9ca3af"
             />
-            <YAxis label={{ value: 'Utilization %', angle: -90, position: 'insideLeft' }} />
+            <YAxis stroke="#9ca3af" fontSize={10} label={{ value: 'Utilization %', angle: -90, position: 'insideLeft', style: { fill: '#6b7280', fontSize: '10px' } }} />
             <Tooltip content={<PercentageTooltip />} />
             <Bar 
               dataKey="utilization" 
@@ -231,7 +229,7 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
               {budgetUtilizationData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.overBudget ? '#ff6b6b' : '#4caf50'} 
+                  fill={entry.overBudget ? '#111827' : '#9ca3af'} 
                 />
               ))}
             </Bar>
@@ -241,29 +239,29 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
 
       {/* AI Performance Metrics */}
       {spendingTrendData.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            🤖 AI Spending Predictions
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <h3 className="text-base font-semibold text-gray-900 mb-5">
+            AI Spending Predictions
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <LineChart data={spendingTrendData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="name" stroke="#9ca3af" fontSize={10} />
+              <YAxis stroke="#9ca3af" fontSize={10} />
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
               <Line 
                 type="monotone" 
                 dataKey="averageSpending" 
-                stroke="#8884d8" 
-                strokeWidth={3}
+                stroke="#4b5563" 
+                strokeWidth={2}
                 name="Average Spending"
               />
               <Line 
                 type="monotone" 
                 dataKey="predictedOverrun" 
-                stroke="#ff6b6b" 
-                strokeWidth={3}
+                stroke="#111827" 
+                strokeWidth={2}
                 name="Predicted Overrun"
               />
             </LineChart>
@@ -273,43 +271,43 @@ export default function BudgetCharts({ budgets, className = '' }: BudgetChartsPr
 
       {/* AI Confidence Levels */}
       {aiConfidenceData.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            🎯 AI Suggestion Confidence
+        <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <h3 className="text-base font-semibold text-gray-900 mb-5">
+            AI Suggestion Confidence
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={aiConfidenceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis label={{ value: 'Confidence %', angle: -90, position: 'insideLeft' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="name" stroke="#9ca3af" fontSize={10} />
+              <YAxis stroke="#9ca3af" fontSize={10} label={{ value: 'Confidence %', angle: -90, position: 'insideLeft', style: { fill: '#6b7280', fontSize: '10px' } }} />
               <Tooltip 
                 formatter={(value: number) => [`${value.toFixed(1)}%`, 'Confidence']}
               />
-              <Bar dataKey="avgConfidence" fill="#9c88ff" name="AI Confidence" />
+              <Bar dataKey="avgConfidence" fill="#4b5563" name="AI Confidence" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       )}
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200">
-          <h4 className="text-lg font-semibold text-blue-800 mb-2">Total Budgeted</h4>
-          <p className="text-3xl font-bold text-blue-900">
-            ${budgets.reduce((sum, b) => sum + b.amount, 0).toLocaleString()}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-500 mb-1">Total Budgeted</h4>
+          <p className="text-2xl font-bold text-gray-900">
+            ₹{budgets.reduce((sum, b) => sum + b.amount, 0).toLocaleString()}
           </p>
         </div>
         
-        <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-6 border border-red-200">
-          <h4 className="text-lg font-semibold text-red-800 mb-2">Total Spent</h4>
-          <p className="text-3xl font-bold text-red-900">
-            ${budgets.reduce((sum, b) => sum + b.spent, 0).toLocaleString()}
+        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-500 mb-1">Total Spent</h4>
+          <p className="text-2xl font-bold text-gray-900">
+            ₹{budgets.reduce((sum, b) => sum + b.spent, 0).toLocaleString()}
           </p>
         </div>
         
-        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-green-200">
-          <h4 className="text-lg font-semibold text-green-800 mb-2">Overall Utilization</h4>
-          <p className="text-3xl font-bold text-green-900">
+        <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
+          <h4 className="text-sm font-medium text-gray-500 mb-1">Overall Utilization</h4>
+          <p className="text-2xl font-bold text-gray-900">
             {((budgets.reduce((sum, b) => sum + b.spent, 0) / budgets.reduce((sum, b) => sum + b.amount, 0)) * 100).toFixed(1)}%
           </p>
         </div>

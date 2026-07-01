@@ -97,14 +97,14 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className={`flip-container ${isFlipped ? 'flip' : ''}`}>
         <div className="flipper w-[360px] min-h-[460px] relative">
           {/* Login Side */}
-          <div className="front bg-white/70 backdrop-blur-xl shadow-2xl rounded-xl px-8 py-10">
-            <h2 className="text-3xl font-bold text-blue-700 text-center mb-6">Welcome Back</h2>
+          <div className="front bg-white shadow-lg rounded-xl px-8 py-10 border border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Welcome Back</h2>
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-gray-100 border border-gray-300 text-gray-700 px-4 py-3 rounded mb-4 text-sm">
                 {error}
               </div>
             )}
@@ -114,7 +114,7 @@ export default function AuthPage() {
                 placeholder="Email"
                 value={loginData.email}
                 onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                 required
                 disabled={loading}
               />
@@ -123,26 +123,26 @@ export default function AuthPage() {
                 placeholder="Password"
                 value={loginData.password}
                 onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                 required
                 disabled={loading}
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading}
               >
                 {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
-            <p className="text-sm text-center mt-4 text-gray-700">
+            <p className="text-sm text-center mt-5 text-gray-500">
               Don&apos;t have an account?{' '}
               <button
                 onClick={() => {
                   setIsFlipped(true);
                   setError('');
                 }}
-                className="text-blue-600 underline"
+                className="text-gray-900 font-medium underline underline-offset-2"
               >
                 Sign up
               </button>
@@ -150,10 +150,10 @@ export default function AuthPage() {
           </div>
 
           {/* Signup Side */}
-          <div className="back bg-white/70 backdrop-blur-xl shadow-2xl rounded-xl px-8 py-10">
-            <h2 className="text-3xl font-bold text-blue-700 text-center mb-6">Create Account</h2>
+          <div className="back bg-white shadow-lg rounded-xl px-8 py-10 border border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Create Account</h2>
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div className="bg-gray-100 border border-gray-300 text-gray-700 px-4 py-3 rounded mb-4 text-sm">
                 {error}
               </div>
             )}
@@ -163,7 +163,7 @@ export default function AuthPage() {
                 placeholder="Full Name"
                 value={signupData.fullName}
                 onChange={(e) => setSignupData({...signupData, fullName: e.target.value})}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                 required
                 disabled={loading}
               />
@@ -172,7 +172,7 @@ export default function AuthPage() {
                 placeholder="Email"
                 value={signupData.email}
                 onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                 required
                 disabled={loading}
               />
@@ -181,26 +181,26 @@ export default function AuthPage() {
                 placeholder="Password"
                 value={signupData.password}
                 onChange={(e) => setSignupData({...signupData, password: e.target.value})}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-gray-50 text-sm"
                 required
                 disabled={loading}
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading}
               >
-                {loading ? 'Creating Account...' : 'Signup'}
+                {loading ? 'Creating Account...' : 'Sign Up'}
               </button>
             </form>
-            <p className="text-sm text-center mt-4 text-gray-700">
+            <p className="text-sm text-center mt-5 text-gray-500">
               Already have an account?{' '}
               <button
                 onClick={() => {
                   setIsFlipped(false);
                   setError('');
                 }}
-                className="text-blue-600 underline"
+                className="text-gray-900 font-medium underline underline-offset-2"
               >
                 Login
               </button>

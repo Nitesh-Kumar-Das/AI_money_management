@@ -4,6 +4,15 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import {
+  ChartBarIcon,
+  PlusCircleIcon,
+  AdjustmentsHorizontalIcon,
+  InformationCircleIcon,
+  ArrowRightStartOnRectangleIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -19,28 +28,28 @@ export default function Navbar() {
   }, []);
 
   const mainLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/add-expense', label: 'Add Expense', icon: '💰' },
-    { href: '/budgets', label: 'Smart Budgets', icon: '🎯' },
-    { href: '/about', label: 'About', icon: '📋' },
+    { href: '/dashboard', label: 'Dashboard', Icon: ChartBarIcon },
+    { href: '/add-expense', label: 'Add Expense', Icon: PlusCircleIcon },
+    { href: '/budgets', label: 'Budgets', Icon: AdjustmentsHorizontalIcon },
+    { href: '/about', label: 'About', Icon: InformationCircleIcon },
   ];
 
   const handleSignout = () => {
     localStorage.removeItem('userName');
-    
+    localStorage.removeItem('token');
     router.push('/auth');
   };
 
   return (
-    <nav className="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white px-4 sm:px-8 py-3 sm:py-4 shadow-2xl backdrop-blur-sm border-b border-white/10 relative z-10">
+    <nav className="bg-gray-900 text-white px-4 sm:px-8 py-3 sm:py-4 border-b border-gray-800 relative z-10">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo/Brand */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-lg">
-            <span className="text-lg sm:text-2xl">💸</span>
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 bg-white rounded-lg flex items-center justify-center">
+            <span className="text-gray-900 font-bold text-sm sm:text-base">ET</span>
           </div>
           <div>
-            <h1 className="text-base sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h1 className="text-base sm:text-lg font-semibold text-white tracking-tight">
               ExpenseTracker
             </h1>
             <p className="text-xs text-gray-400 hidden sm:block">Smart Budget Advisor</p>
@@ -48,63 +57,58 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <ul className="hidden lg:flex space-x-2">
-          {mainLinks.map(({ href, label, icon }) => (
-            <li key={href} className="relative">
+        <ul className="hidden lg:flex space-x-1">
+          {mainLinks.map(({ href, label, Icon }) => (
+            <li key={href}>
               <Link href={href}>
                 <motion.div
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-xl transition-all duration-300 ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ${
                     pathname === href
-                      ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 shadow-lg backdrop-blur-sm border border-blue-400/30'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10 hover:backdrop-blur-sm'
+                      ? 'bg-gray-800 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                   }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <span className="text-base">{icon}</span>
+                  <Icon className="w-4 h-4" />
                   <span className="font-medium text-sm">{label}</span>
                 </motion.div>
               </Link>
-              {pathname === href && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-400/20"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              )}
             </li>
           ))}
         </ul>
 
-        {/* Right Side - User Info & Controls */}
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* User Welcome - Desktop Only */}
+        {/* Right Side */}
+        <div className="flex items-center space-x-3">
+          {/* User Welcome */}
           {userName && (
-            <div className="hidden xl:block bg-white/10 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/20">
-              <p className="text-xs text-gray-300">Welcome back,</p>
-              <p className="font-semibold text-blue-300 text-sm">{userName}</p>
+            <div className="hidden xl:block text-right">
+              <p className="text-xs text-gray-500">Welcome,</p>
+              <p className="font-medium text-gray-300 text-sm">{userName}</p>
             </div>
           )}
           
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 border border-white/20"
+            className="lg:hidden flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            <span className="text-lg">{isMobileMenuOpen ? '✕' : '☰'}</span>
+            {isMobileMenuOpen ? (
+              <XMarkIcon className="w-5 h-5" />
+            ) : (
+              <Bars3Icon className="w-5 h-5" />
+            )}
           </button>
           
           {/* Signout Button */}
           <motion.button
             onClick={handleSignout}
-            className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-red-500/20 to-pink-500/20 hover:from-red-500/30 hover:to-pink-500/30 text-red-300 hover:text-red-200 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl border border-red-400/30 hover:border-red-400/50 transition-all duration-300 backdrop-blur-sm"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="flex items-center space-x-2 text-gray-400 hover:text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <span className="text-base sm:text-lg">🚪</span>
-            <span className="font-medium text-xs sm:text-base hidden sm:inline">Signout</span>
+            <ArrowRightStartOnRectangleIcon className="w-4 h-4" />
+            <span className="font-medium text-sm hidden sm:inline">Sign Out</span>
           </motion.button>
         </div>
       </div>
@@ -112,28 +116,28 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="lg:hidden absolute top-full left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-white/10 shadow-xl"
+          exit={{ opacity: 0, y: -10 }}
+          className="lg:hidden absolute top-full left-0 right-0 bg-gray-900 border-t border-gray-800"
         >
-          <div className="px-4 py-4 space-y-2">
+          <div className="px-4 py-3 space-y-1">
             {userName && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 mb-3">
-                <p className="text-xs text-gray-300">Welcome back,</p>
-                <p className="font-semibold text-blue-300 text-sm">{userName}</p>
+              <div className="px-3 py-2 mb-2">
+                <p className="text-xs text-gray-500">Welcome,</p>
+                <p className="font-medium text-gray-300 text-sm">{userName}</p>
               </div>
             )}
-            {mainLinks.map(({ href, label, icon }) => (
+            {mainLinks.map(({ href, label, Icon }) => (
               <Link key={href} href={href} onClick={() => setIsMobileMenuOpen(false)}>
                 <div
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 ${
+                  className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                     pathname === href
-                      ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border border-blue-400/30'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-gray-800 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                   }`}
                 >
-                  <span className="text-lg">{icon}</span>
+                  <Icon className="w-5 h-5" />
                   <span className="font-medium">{label}</span>
                 </div>
               </Link>

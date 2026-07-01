@@ -52,7 +52,7 @@ export default function PersonalizedWelcomeLoader({
   }, [animationComplete, redirectTo, redirectDelay, router]);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-white text-blue-700 font-mono text-3xl md:text-5xl tracking-wider">
+    <div className="h-screen flex items-center justify-center bg-white text-gray-900 font-mono text-3xl md:text-5xl tracking-wider">
       <span>{displayedText}</span>
       <span className="animate-pulse ml-1">|</span>
     </div>
